@@ -10,72 +10,31 @@ async function selectBoard(connection) {
 }
 
 
-// userId 회원 조회
-async function selectUserId(connection, userId) {
-  const selectUserIdQuery = `
-                 SELECT id, email, nickname 
-                 FROM UserInfo 
-                 WHERE id = ?;
+// boardId 게시판 조회
+async function selectBoardId(connection, boardId) {
+  const selectBoardIdQuery = `
+                 SELECT B.id'boardId',title,userName,contents,createdAt
+                 from Board B join User on User.id=B.userId 
+                 where B.id=?
                  `;
-  const [userRow] = await connection.query(selectUserIdQuery, userId);
-  return userRow;
+  const [boardRow] = await connection.query(selectBoardIdQuery, boardId);
+  return boardRow;
 }
 
-async function selectDetailMenu(connection,menuId){
-  const menuQuery=`
-  select menu,imgUrl from StoreMenu where id=?
-  `;
-  const selectDetailMenuQuery = `
-    select SMO.id,
-           SMO.oName,
-           IF(SMO.multiple, 'true', 'false')'multipleCheck',maximum
-    from StoreMenuOption SMO
-           join StoreMenu SM on SM.id = SMO.menuId
-    where SM.id =?`;
 
-  const selectMenuDetailQuery= `
-  select SMO.id'mainOption',
-       SMOP.id 'optionId',
-       SMOP.oName,
-       SMOP.price
-from StoreMenuOptionPlus SMOP
-join StoreMenuOption SMO on SMO.id=SMOP.optionId
-where SMO.menuId=?;
-  `;
-
-  //메뉴 리스트
-  const [menuList] = await connection.query(selectDetailMenuQuery, menuId);
-  //메뉴 선택사항 리스트
-  const [menuDetail]=await connection.query(selectMenuDetailQuery,menuId);
-
-  let menuDetailList=[];
-
-  for (let i=0;i<menuList.length;i++){
-
-    for(let j=0;j<menuDetail.length;j++){
-      if(menuList[i].id == menuDetail[j].mainOption){
-        menuDetailList.push(menuDetail[j])
-      }
-
-    }
-    menuList[i].menuOption=menuDetailList;
-    menuDetailList=[]
-  }
-  return menuList;
-}
-
-// 유저 생성
-async function insertUserInfo(connection, insertUserInfoParams) {
-  const insertUserInfoQuery = `
-        INSERT INTO UserInfo(email, password, nickname)
+// 게시판 생성
+async function insertBoard(connection, insertBoardParams) {
+  const insertBoardQuery = `
+        INSERT INTO Board(userId, title, contents)
         VALUES (?, ?, ?);
     `;
-  const insertUserInfoRow = await connection.query(
-    insertUserInfoQuery,
-    insertUserInfoParams
+
+  const insertBoardRow = await connection.query(
+    insertBoardQuery,
+      insertBoardParams
   );
 
-  return insertUserInfoRow;
+  return insertBoardRow;
 }
 
 // 패스워드 체크
@@ -105,22 +64,26 @@ async function selectUserAccount(connection, email) {
   return selectUserAccountRow[0];
 }
 
-async function updateUserInfo(connection, id, nickname) {
+async function updateBoard(connection, boardId, contents) {
   const updateUserQuery = `
-  UPDATE UserInfo 
-  SET nickname = ?
+  UPDATE Board 
+  SET contents = ?
   WHERE id = ?;`;
-  const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
+  const updateUserRow = await connection.query(updateUserQuery, [contents, boardId]);
   return updateUserRow[0];
 }
 
-
+async function deleteBoard(connection,boardId){
+  const deleteBoardQuery= `
+  DELETE FROM Board where id=?`
+  const deleteBoardRow=await connection.query(deleteBoardQuery,boardId)
+}
 module.exports = {
   selectBoard,
-  selectDetailMenu,
-  selectUserId,
-  insertUserInfo,
+  selectBoardId,
+  insertBoard,
   selectUserPassword,
   selectUserAccount,
-  updateUserInfo,
+  updateBoard,
+  deleteBoard
 };

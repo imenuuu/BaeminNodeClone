@@ -4,11 +4,15 @@ module.exports = function(app){
     const board = require('./boardController');
     const jwtMiddleware = require('../../../config/jwtMiddleware');
 
-
     app.get('/boards', board.getBoards)
 
+    app.get('/boards/:boardId',board.getBoardsById)
 
+    app.post('/boards',board.postBoard)
 
+    app.patch('/boards/:boardId',board.patchBoard)
+
+    app.delete('/boards/:boardId',board.deleteBoard)
 };
 
 

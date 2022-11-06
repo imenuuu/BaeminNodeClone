@@ -23,13 +23,13 @@ exports.getBoardList = async function (email) {
   }
 };
 
-exports.retrieveUser = async function (userId) {
+exports.retrieveBoard = async function (boardId) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const userResult = await userDao.selectUserId(connection, userId);
+  const boardResult = await boardDao.selectBoardId(connection, boardId);
 
   connection.release();
 
-  return userResult[0];
+  return boardResult[0];
 };
 
 exports.detailMenu = async function(menuId){

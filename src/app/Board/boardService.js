@@ -13,33 +13,16 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (email, password, nickname) {
-    try {
-        // 이메일 중복 확인
-        const emailRows = await userProvider.emailCheck(email);
-        if (emailRows.length > 0)
-            return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
+exports.createBoard = async function (userId,title,contents) {
 
-        // 비밀번호 암호화
-        const hashedPassword = await crypto
-            .createHash("sha512")
-            .update(password)
-            .digest("hex");
-
-        const insertUserInfoParams = [email, hashedPassword, nickname];
+        const insertBoardParams = [userId,title,contents];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
-        const userIdResult = await userDao.insertUserInfo(connection, insertUserInfoParams);
-        console.log(`추가된 회원 : ${userIdResult[0].insertId}`)
+        const boardIdResult = await boardDao.insertBoard(connection, insertBoardParams);
         connection.release();
         return response(baseResponse.SUCCESS);
 
-
-    } catch (err) {
-        logger.error(`App - createUser Service error\n: ${err.message}`);
-        return errResponse(baseResponse.DB_ERROR);
-    }
 };
 
 
@@ -97,17 +80,20 @@ exports.postSignIn = async function (userId, password) {
     }
 };
 
-exports.editUser = async function (id, nickname) {
-    try {
-        console.log(id)
-        const connection = await pool.getConnection(async (conn) => conn);
-        const editUserResult = await userDao.updateUserInfo(connection, id, nickname)
-        connection.release();
+exports.editBoard = async function (boardId,contents) {
+    const connection = await pool.getConnection(async (conn) => conn);
 
-        return response(baseResponse.SUCCESS);
+    const editBoardResult = await boardDao.updateBoard(connection, boardId, contents)
+    connection.release();
 
-    } catch (err) {
-        logger.error(`App - editUser Service error\n: ${err.message}`);
-        return errResponse(baseResponse.DB_ERROR);
-    }
+    return response(baseResponse.SUCCESS);
+
+}
+
+exports.deleteBoard = async function (boardId){
+    const connection = await pool.getConnection(async (conn) => conn);
+    const deleteBoardResult=await boardDao.deleteBoard(connection,boardId)
+    connection.release();
+    return response(baseResponse.SUCCESS);
+
 }

@@ -36,16 +36,15 @@ exports.getBoards = async function (req, res) {
  * API Name : 특정 유저 조회 API
  * [GET] /app/users/{userId}
  */
-exports.getStoresById = async function (req, res) {
+exports.getBoardsById = async function (req, res) {
 
     /**
      * Path Variable: userId
      */
-    const userId = req.params.userId;
+    const boardId = req.params.boardId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const userByUserId = await storeProvider.retrieveUser(userId);
+    const userByUserId = await boardProvider.retrieveBoard(boardId);
     return res.send(response(baseResponse.SUCCESS, userByUserId));
 };
 
@@ -59,6 +58,15 @@ exports.getMenuById = async function (req, res) {
     const menuByMenuId = await storeProvider.detailMenu(menuId);
     return res.send(response(baseResponse.SUCCESS, menuByMenuId));
 };
+
+exports.postBoard=async function(req,res){
+    const {userId,title,contents} = req.body;
+
+    const boardResponse= await boardService.createBoard(
+        userId,title,contents
+    );
+    return res.send(boardResponse);
+}
 // TODO: After 로그인 인증 방법 (JWT)
 /**
  * API No. 4
@@ -85,24 +93,25 @@ exports.login = async function (req, res) {
  * path variable : userId
  * body : nickname
  */
-exports.patchUsers = async function (req, res) {
+exports.patchBoard = async function (req, res) {
 
     // jwt - userId, path variable :userId
 
-    const userIdFromJWT = req.verifiedToken.userId
+    const boardId = req.params.boardId;
 
-    const userId = req.params.userId;
-    const nickname = req.body.nickname;
+    const contents = req.body.contents;
 
-    if (userIdFromJWT != userId) {
-        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
-    } else {
-        if (!nickname) return res.send(errResponse(baseResponse.USER_NICKNAME_EMPTY));
 
-        const editUserInfo = await storeService.editUser(userId, nickname)
-        return res.send(editUserInfo);
-    }
+    const editBoard = await boardService.editBoard(boardId,contents)
+    return res.send(editBoard);
 };
+
+exports.deleteBoard=async function(req,res){
+
+    const boardId=req.params.boardId;
+    const deleteBoard=await boardService.deleteBoard(boardId)
+    return res.send(boardId)
+}
 
 
 
@@ -118,6 +127,7 @@ exports.patchUsers = async function (req, res) {
  * [GET] /app/auto-login
  */
 exports.check = async function (req, res) {
+
     const userIdResult = req.verifiedToken.userId;
     console.log(userIdResult);
     return res.send(response(baseResponse.TOKEN_VERIFICATION_SUCCESS));
