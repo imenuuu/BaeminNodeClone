@@ -45,17 +45,16 @@ exports.getStores = async function (req, res) {
  * API Name : 특정 유저 조회 API
  * [GET] /app/users/{userId}
  */
-exports.getStoresById = async function (req, res) {
+exports.getStoresByCatecory = async function (req, res) {
 
     /**
      * Path Variable: userId
      */
-    const userId = req.params.userId;
+    const categoryId = req.params.categoryId;
 
-    if (!userId) return res.send(errResponse(baseResponse.USER_USERID_EMPTY));
 
-    const userByUserId = await storeProvider.retrieveUser(userId);
-    return res.send(response(baseResponse.SUCCESS, userByUserId));
+    const storesByCategoryId = await storeProvider.retrieveStores(categoryId);
+    return res.send(response(baseResponse.SUCCESS, storesByCategoryId));
 };
 
 exports.getMenuById = async function (req, res) {

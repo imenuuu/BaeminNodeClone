@@ -8,14 +8,12 @@ module.exports = function(app){
     app.get('/stores/test', user.getTest)
 
 
-    // 2. 유저 조회 API (+ 검색)
-    app.get('/stores',store.getStores);
 
     //메뉴 조회
     app.get('/stores/menu/:menuId', store.getMenuById);
 
-    // 3. 특정 유저 조회 API
-    app.get('/stores/:storeId', store.getStoresById);
+    //가게 카테고리 별 조회
+    app.get('/stores/:categoryId', store.getStoresByCatecory);
 
 
 

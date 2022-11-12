@@ -9,15 +9,30 @@ async function selectUser(connection) {
 }
 
 
-// userId 회원 조회
-async function selectUserId(connection, userId) {
-  const selectUserIdQuery = `
-                 SELECT id, email, nickname 
-                 FROM UserInfo 
-                 WHERE id = ?;
+// 카테고리 별 가게 조회
+async function selectCategoryId(connection, categoryId) {
+  const selectStoreQuery = `
+    select S.logoImage
+         , S.name
+         , (select avg(R.rating) from Review R where R.storeId = S.id) 'avg',
+        (select (count(*)) from Review R where R.storeId = S.id)'reviewCnt'
+     , S.thumbNail
+         , concat('최소주문 ', S.minimumOrder, '원')                        'minimumOrder'
+     , takeOut,
+      case
+        when (select count(*) from DeliveryTip DT where DT.storeId=S.id)>1
+          then concat('배달팁 ',(select min(tip) from DeliveryTip DT where DT.storeId=S.id),'원~',(select max(tip) from DeliveryTip DT where DT.storeId=S.id),'원')
+        else (concat('배달팁 ',(select tip from DeliveryTip DT where DT.storeId=S.id),'원'))
+        end 'deliveryTip', S.deliveryTime
+    from Store S
+           join Category C on S.category = C.id
+           join User U
+           join UserAddress UA on U.addressId = UA.id
+    where C.id=? and S.deliveryAddress like concat('%',UA.dongAddress,'%')
+    ;
                  `;
-  const [userRow] = await connection.query(selectUserIdQuery, userId);
-  return userRow;
+  const [storeRow] = await connection.query(selectStoreQuery, categoryId);
+  return storeRow;
 }
 
 async function selectDetailMenu(connection,menuId){
@@ -117,7 +132,7 @@ async function updateUserInfo(connection, id, nickname) {
 module.exports = {
   selectUser,
   selectDetailMenu,
-  selectUserId,
+  selectCategoryId,
   insertUserInfo,
   selectUserPassword,
   selectUserAccount,
