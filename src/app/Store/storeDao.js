@@ -75,6 +75,7 @@ where SMO.menuId=?;
     menuList[i].menuOption=menuDetailList;
     menuDetailList=[]
   }
+  console.log(menuList);
   return menuList;
 }
 

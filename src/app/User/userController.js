@@ -26,15 +26,23 @@ exports.postUsers = async function (req, res) {
     /**
      * Body: email, password, nickname
      */
-    const {email, password, nickname} = req.body;
+    const {userId,userName,password,email} = req.body;
 
-    // 빈 값 체크
     if (!email)
         return res.send(response(baseResponse.SIGNUP_EMAIL_EMPTY));
-
+    if(!userName)
+        return res.send(response(baseResponse.USER_NICKNAME_EMPTY));
     // 길이 체크
     if (email.length > 30)
         return res.send(response(baseResponse.SIGNUP_EMAIL_LENGTH));
+    if (userId.length>20)
+        return res.send(response(baseResponse.SIGNUP_ID_LENGTH));
+    if(!userId)
+        return res.send(response(baseResponse.SIGNUP_ID_EMPTY));
+    if (password.length>20 || password.length<6)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_LENGTH));
+    if(!password)
+        return res.send(response(baseResponse.SIGNUP_PASSWORD_EMPTY));
 
     // 형식 체크 (by 정규표현식)
     if (!regexEmail.test(email))
@@ -44,9 +52,10 @@ exports.postUsers = async function (req, res) {
 
 
     const signUpResponse = await userService.createUser(
+        userId,
+        userName,
         email,
-        password,
-        nickname
+        password
     );
 
     return res.send(signUpResponse);

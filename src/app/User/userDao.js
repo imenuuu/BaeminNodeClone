@@ -8,6 +8,14 @@ async function selectUser(connection) {
   return userRows;
 }
 
+async function checkUserEmail(connection, email){
+  const checkEmailQuery =`
+    SELECT email from User where email=?; 
+  `;
+  const checkEmailRow=await connection.query(checkEmailQuery,email);
+  console.log(checkEmailRow)
+  return checkEmailRow;
+}
 // 이메일로 회원 조회
 async function selectUserId(connection, email) {
   const selectUserEmailQuery = `
@@ -23,7 +31,7 @@ async function selectUserId(connection, email) {
 async function selectUserId(connection, userId) {
   const selectUserIdQuery = `
                  SELECT id, email, nickname 
-                 FROM UserInfo 
+                 FROM User 
                  WHERE id = ?;
                  `;
   const [userRow] = await connection.query(selectUserIdQuery, userId);
@@ -33,8 +41,8 @@ async function selectUserId(connection, userId) {
 // 유저 생성
 async function insertUserInfo(connection, insertUserInfoParams) {
   const insertUserInfoQuery = `
-        INSERT INTO UserInfo(email, password, nickname)
-        VALUES (?, ?, ?);
+        INSERT INTO User(userId,userName, password,email)
+        VALUES (?,?, ?, ?);
     `;
   const insertUserInfoRow = await connection.query(
     insertUserInfoQuery,
@@ -84,6 +92,7 @@ async function updateUserInfo(connection, id, nickname) {
 module.exports = {
   selectUser,
   selectUserId,
+  checkUserEmail,
   insertUserInfo,
   selectUserPassword,
   selectUserAccount,

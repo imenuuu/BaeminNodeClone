@@ -13,11 +13,11 @@ const {connect} = require("http2");
 
 // Service: Create, Update, Delete 비즈니스 로직 처리
 
-exports.createUser = async function (email, password, nickname) {
+exports.createUser = async function (userId, userName, email, password) {
     try {
         // 이메일 중복 확인
         const emailRows = await userProvider.emailCheck(email);
-        if (emailRows.length > 0)
+        if (emailRows.length < 1)
             return errResponse(baseResponse.SIGNUP_REDUNDANT_EMAIL);
 
         // 비밀번호 암호화
@@ -26,7 +26,7 @@ exports.createUser = async function (email, password, nickname) {
             .update(password)
             .digest("hex");
 
-        const insertUserInfoParams = [email, hashedPassword, nickname];
+        const insertUserInfoParams = [userId, userName, email, hashedPassword];
 
         const connection = await pool.getConnection(async (conn) => conn);
 
