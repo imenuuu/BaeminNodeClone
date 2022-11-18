@@ -112,16 +112,14 @@ exports.getUserById = async function (req, res) {
  */
 exports.login = async function (req, res) {
 
-    const {userId, password} = req.body;
+    const {email, password} = req.body;
 
     // TODO: email, password 형식적 Validation
     let signInResponse;
-    if(!regexEmail.test(userId)){
-        signInResponse = await userService.postEmailSignIn(userId, password);
-    }
-    else{
-        signInResponse = await userService.postSignIn(userId, password);
-    }
+
+    signInResponse = await userService.postSignIn(email, password);
+
+
 
 
     return res.send(signInResponse);
@@ -169,6 +167,5 @@ exports.patchUsers = async function (req, res) {
  */
 exports.check = async function (req, res) {
     const userIdResult = req.verifiedToken.userId;
-    console.log(userIdResult);
     return res.send(response(baseResponse.TOKEN_VERIFICATION_SUCCESS));
 };

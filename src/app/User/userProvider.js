@@ -31,11 +31,10 @@ exports.retrieveUser = async function (userId) {
   return userResult[0];
 };
 
-exports.userCheck = async function (userId) {
+exports.userCheck = async function (email) {
   const connection = await pool.getConnection(async (conn) => conn);
-  const emailCheckResult = await userDao.selectUserId(connection, userId);
+  const emailCheckResult = await userDao.selectUserId(connection, email);
   connection.release();
-  console.log(emailCheckResult);
 
   return emailCheckResult;
 };

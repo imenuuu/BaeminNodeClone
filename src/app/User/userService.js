@@ -44,13 +44,14 @@ exports.createUser = async function (userId, userName, email, password) {
 
 
 // TODO: After 로그인 인증 방법 (JWT)
-exports.postSignIn = async function (userId, password) {
+exports.postSignIn = async function (email, password) {
     try {
         // 이메일 여부 확인
-        const idRows = await userProvider.userCheck(userId);
-        if (idRows.length < 1) return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
+        const idRows = await userProvider.userCheck(email);
+        if (idRows.length < 1)
+            return errResponse(baseResponse.SIGNIN_EMAIL_WRONG);
 
-        const selectId = idRows[0].userId
+        const selectId = idRows[0].id
 
         // 비밀번호 확인
         const hashedPassword = await crypto
@@ -59,7 +60,7 @@ exports.postSignIn = async function (userId, password) {
             .digest("hex");
 
         const selectUserPasswordParams = [selectId, hashedPassword];
-        
+
         const passwordRows = await userProvider.passwordCheck(selectUserPasswordParams);
 
         if (passwordRows[0].password !== hashedPassword) {
@@ -67,13 +68,15 @@ exports.postSignIn = async function (userId, password) {
         }
 
         // 계정 상태 확인
-        const userInfoRows = await userProvider.accountCheck(email);
+        /*const userInfoRows = await userProvider.accountCheck(email);
 
         if (userInfoRows[0].status === "INACTIVE") {
             return errResponse(baseResponse.SIGNIN_INACTIVE_ACCOUNT);
         } else if (userInfoRows[0].status === "DELETED") {
             return errResponse(baseResponse.SIGNIN_WITHDRAWAL_ACCOUNT);
         }
+
+         */
 
         console.log(userInfoRows[0].id) // DB의 userId
 
