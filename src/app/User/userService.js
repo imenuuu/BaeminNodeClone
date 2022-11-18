@@ -98,6 +98,7 @@ exports.postSignIn = async function (email, password) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
 exports.postEmailSignIn = async function (userId, password) {
     try {
         // 이메일 여부 확인
