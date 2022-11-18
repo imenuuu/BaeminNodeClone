@@ -49,7 +49,6 @@ async function selectUserPassword(connection, selectUserPasswordParams) {
       selectUserPasswordQuery,
       selectUserPasswordParams
   );
-  console.log(selectUserPasswordParams)
 
   return selectUserPasswordRow;
 }
@@ -58,7 +57,7 @@ async function selectUserPassword(connection, selectUserPasswordParams) {
 async function selectUserAccount(connection, email) {
   const selectUserAccountQuery = `
         SELECT status, id
-        FROM UserInfo 
+        FROM User 
         WHERE email = ?;`;
   const selectUserAccountRow = await connection.query(
       selectUserAccountQuery,

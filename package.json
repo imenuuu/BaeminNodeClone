@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@gitlab.com:softsquared/template/api-server-node.git"
+    "url": "git+ssh://git@gitlab.com/softsquared/template/api-server-node.git"
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^4.18.2",
+    "expresss": "^0.0.0",
     "jsonwebtoken": "^8.5.1",
     "method-override": "^3.0.0",
     "mysql2": "^2.0.0",
@@ -30,5 +31,9 @@
   "devDependencies": {
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0"
-  }
+  },
+  "bugs": {
+    "url": "https://gitlab.com/softsquared/template/api-server-node/issues"
+  },
+  "homepage": "https://gitlab.com/softsquared/template/api-server-node#readme"
 }

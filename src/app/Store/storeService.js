@@ -67,6 +67,7 @@ exports.postSignIn = async function (userId, password) {
         }
 
         // 계정 상태 확인
+        /*
         const userInfoRows = await userProvider.accountCheck(email);
 
         if (userInfoRows[0].status === "INACTIVE") {
@@ -76,6 +77,8 @@ exports.postSignIn = async function (userId, password) {
         }
 
         console.log(userInfoRows[0].id) // DB의 userId
+
+         */
 
         //토큰 생성 Service
         let token = await jwt.sign(
