@@ -74,7 +74,15 @@ async function updateUserInfo(connection, id, nickname) {
   const updateUserRow = await connection.query(updateUserQuery, [nickname, id]);
   return updateUserRow[0];
 }
-
+async function addUserAddress(connection,postParams){
+  const postUserAddressQuery=`
+  INSERT INTO UserAddress(userId,cityAddress,dongAddress,address) values (?,?,?,?);
+  `
+  const insertUserAddressRow=await connection.query(
+      postUserAddressQuery,postParams
+  );
+  return insertUserAddressRow;
+}
 
 module.exports = {
   selectUser,
@@ -84,4 +92,5 @@ module.exports = {
   selectUserPassword,
   selectUserAccount,
   updateUserInfo,
+  addUserAddress
 };

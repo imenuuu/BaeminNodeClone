@@ -33,6 +33,10 @@ module.exports = {
     USER_NICKNAME_EMPTY : { "isSuccess": false, "code": 2017, "message": "닉네임 값을 입력해주세요" },
 
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
+    USER_ADDRESS_EMPTY : { "isSuccess": false, "code": 2019, "message": "상세 주소 값을 입력해주세요" },
+    USER_DONGADDRESS_EMPTY : { "isSuccess": false, "code": 2020, "message": "동 주소 값을 입력해주세요" },
+    USER_CITYADDRESS_EMPTY : { "isSuccess": false, "code": 2021, "message": "시 주소 값을 입력해주세요" },
+
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },

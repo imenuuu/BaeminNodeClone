@@ -25,7 +25,7 @@ module.exports = function(app){
     //jwt 검증
     app.get('/auto-login', jwtMiddleware, user.check);
 
-
+    app.post('/users/address/:userId',jwtMiddleware,user.addUserAddress);
 };
 
 

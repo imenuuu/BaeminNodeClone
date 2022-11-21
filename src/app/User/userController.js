@@ -140,7 +140,7 @@ exports.patchUsers = async function (req, res) {
     const userIdFromJWT = req.verifiedToken.userId
 
     const userId = req.params.userId;
-    const nickname = req.body.nickname;
+    const nickname = req.body.name;
 
     if (userIdFromJWT != userId) {
         res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
@@ -153,7 +153,24 @@ exports.patchUsers = async function (req, res) {
 };
 
 
+exports.addUserAddress= async function(req,res){
+    const userIdByJwt=req.verifiedToken.userId
 
+    const userId=req.params.userId;
+    const {cityAddress,dongAddress, address}=req.body;
+
+    let postParams=[userId,cityAddress,dongAddress,address];
+    if(userIdByJwt != userId){
+        res.send(errResponse(baseResponse.USER_ID_NOT_MATCH));
+    } else {
+        if (!dongAddress) return res.send(errResponse(baseResponse.USER_DONGADDRESS_EMPTY ));
+        if (!cityAddress) return res.send(errResponse(baseResponse.USER_CITYADDRESS_EMPTY ));
+        if (!address) return res.send(errResponse(baseResponse.USER_ADDRESS_EMPTY ));
+
+        const postUserAddress=await userService.addUserAddress(postParams);
+        return res.send(postUserAddress);
+    }
+}
 
 
 

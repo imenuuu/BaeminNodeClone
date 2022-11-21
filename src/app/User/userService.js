@@ -151,6 +151,20 @@ exports.postEmailSignIn = async function (userId, password) {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.addUserAddress=async function(postParams){
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const addUserAddressResult = await userDao.addUserAddress(connection,postParams)
+        connection.release();
+
+        return response(baseResponse.SUCCESS);
+
+    } catch (err) {
+        logger.error(`App - editUser Service error\n: ${err.message}`);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
 exports.editUser = async function (id, nickname) {
     try {
         console.log(id)
@@ -165,3 +179,4 @@ exports.editUser = async function (id, nickname) {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
